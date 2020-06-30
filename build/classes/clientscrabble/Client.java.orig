@@ -1,0 +1,144 @@
+package clientscrabble;
+
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import dataObjects.TurnData;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import remote.IGame;
+import remote.IGameServer;
+import server.UserNameBooleanTuple;
+import remote.IClientCallback;
+
+// Implementation of client callback along with client specific methods. CaLLS server rmi methods
+public class Client extends UnicastRemoteObject implements IClientCallback, IClientGame {
+
+    public IGame game;
+    private IGameServer gameServer;
+    private String gameName;
+    private Registry registry;
+    public Player player;
+    public GameWindow gameWindow;
+
+    protected Client(IGameServer gameServer, Registry registry, GameWindow gameWindow, Player player)
+            throws RemoteException {
+        this.gameServer = gameServer;
+        this.registry = registry;
+        this.player = player;
+        this.gameWindow = gameWindow;
+        // TODO Auto-generated constructor stub
+    }
+
+    // Finish turn at the client side
+    public boolean ChangeTurn(TurnData turnData) throws RemoteException {
+        return gameWindow.changeTurn(turnData);
+    }
+
+    // Start game by calling server method
+    public boolean StartGame() throws RemoteException {
+        gameName = gameServer.startGame(player.getUsername());
+        try {
+            // game = (IGame) Naming.lookup("rmi://10.12.102.156/" + gameName);
+            System.out.println("Game Name: " + gameName + "\n");
+            game = (IGame) Naming.lookup(gameName);
+            // game = (IGame) registry.lookup(gameName);
+        } catch (NotBoundException | MalformedURLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public boolean StartGame(String gameName) throws RemoteException {
+        try {
+            // game = (IGame) Naming.lookup("rmi://10.12.102.156/" + gameName);
+            System.out.println("Game Name: " + gameName + "\n");
+            game = (IGame) Naming.lookup(gameName);
+            // game = (IGame) registry.lookup(gameName);
+        } catch (NotBoundException | MalformedURLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    // Get the name of the game which was set at the server
+    public String GetGameName() {
+        // TODO Auto-generated method stub
+        return gameName;
+    }
+
+<<<<<<< HEAD
+    // Vote on a word
+    @Override
+    public boolean Vote(String word) throws RemoteException {
+        JFrame jf = new JFrame();
+        jf.setAlwaysOnTop(true);
+        int option = JOptionPane.showConfirmDialog(jf,
+                "Do you accept this word: " + word + " as a meanningful word ?", "Select an Option...",
+                JOptionPane.YES_NO_OPTION);
+
+        if (option == 0) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    // Called by the server when it wants to update the list of users in the current
+    // queue
+    @Override
+    public void UpdateQueue(String[] queue) throws RemoteException {
+        // TODO Auto-generated method stub
+        gameWindow.UpdateQueue(queue);
+    }
+
+    public void Quit() {
+        try {
+            gameServer.quit(player.getUsername());
+        } catch (RemoteException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void UpdateChatbox(String msg) throws RemoteException {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        gameWindow.UpdateChatbox(msg);
+    }
+
+    @Override
+    public String getPlayerName() throws RemoteException {
+        return this.player.getUsername();
+    }
+=======
+	// Called by the server when it wants to update the list of users in the current
+	// queue
+	@Override
+	public void UpdateQueue(String[] queue) throws RemoteException {
+		// TODO Auto-generated method stub
+		gameWindow.UpdateQueue(queue);
+	}
+	
+	public void Quit() {
+		try {
+			gameServer.quit(player.getUsername());
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void UpdateScore(int score, String userName) throws RemoteException {
+		gameWindow.updateScoreForPlayer(score, userName);
+		
+	}
+>>>>>>> DS2018Melbourne/voting
+}

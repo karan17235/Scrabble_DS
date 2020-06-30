@@ -1,0 +1,29 @@
+package remote;
+
+import dataObjects.TurnData;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+// FOR COMMENTS SEE IMPLEMENTATION ALSO
+// This interface has all the game mechanics
+
+public interface IGame extends Remote {
+<<<<<<< HEAD
+
+    public String getGameName() throws RemoteException;
+
+    public int scoreCalculation(String userName, String word) throws RemoteException;
+
+    public void endTurn(String userName, TurnData turnData) throws RemoteException;
+
+    public void exit(String userName) throws RemoteException;
+
+    public String Vote(String userName, ArrayList words) throws RemoteException;
+=======
+	public String getGameName() throws RemoteException;
+        //public int scoreCalculation (String userName, String word)throws RemoteException;
+        public void endTurn(String userName, TurnData turnData) throws RemoteException;
+        public void exit(String userName) throws RemoteException;
+        public int Vote(String userName, ArrayList words) throws RemoteException;
+>>>>>>> DS2018Melbourne/voting
+}
